@@ -1,5 +1,7 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom';
+import Search from './Search';
+
 
 
 const Navbar = () => {
@@ -46,7 +48,9 @@ const Navbar = () => {
         </ul>
 
         {/* search and toggle */}
-        <div>Search</div>
+        <div className='md:flex hidden items-center space-x-4'>
+         <Search/>
+        </div>
 
       </div>
 
