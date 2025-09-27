@@ -6,10 +6,10 @@ const Search = () => {
 
     <>
     <div className='relative'>
-        <input type="text" placeholder='Search' className='bg-[#F4F4F5]' /> 
+        <input type="text" placeholder='Search' className='bg-[#F4F4F5] py-2 pl-4 pr-4 rounded-full focus:outline-none' /> 
 
         <button>
-        <CiSearch />
+        <CiSearch className=' absolute right-3 top-2.5 hover:bg-gray-100' />
         </button>
     </div>
     

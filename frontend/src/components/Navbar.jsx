@@ -1,10 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom';
 import Search from './Search';
+import { FaMoon } from "react-icons/fa6";
+import { MdOutlineLightMode } from "react-icons/md";
 
 
 
 const Navbar = () => {
+
+  const[isDarkMode, setIsDarkMode] = useState(false);
+  const toggleDarkMode = () => setIsDarkMode(!isDarkMode)
+
   return (
 
     <nav className='bg-white shadow-md'>
@@ -50,6 +56,14 @@ const Navbar = () => {
         {/* search and toggle */}
         <div className='md:flex hidden items-center space-x-4'>
          <Search/>
+
+         <div className={`w-14 h-8 flex items-center bg-[#E8E8EA] rounded-full p-1 cursor-pointer transition-colors duration-300 ${isDarkMode ? "justify-end" : "justify-start"}` }>
+          <button onClick={toggleDarkMode} className='w-6 h-6 bg-white rounded-full shadow-md flex items-center justify-center transition-transform duration-300'>
+            {
+              isDarkMode ? <FaMoon  className='text-gray-500'/> : <MdOutlineLightMode  className='text-yellow-500'/>
+            }
+          </button>
+         </div>
         </div>
 
       </div>
