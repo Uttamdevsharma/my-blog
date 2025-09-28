@@ -3,10 +3,16 @@ import { NavLink } from 'react-router-dom';
 import Search from './Search';
 import { FaMoon } from "react-icons/fa6";
 import { MdOutlineLightMode } from "react-icons/md";
-
+import { IoMdClose } from "react-icons/io";
+import { HiMiniBars3BottomRight } from "react-icons/hi2";
 
 
 const Navbar = () => {
+
+  const [isMenuOpen , setIsMenuOpen] = useState(false);
+  const toggleMobileMenu = () => {
+    setIsMenuOpen(!isMenuOpen)
+  }
 
   const[isDarkMode, setIsDarkMode] = useState(false);
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode)
@@ -66,10 +72,51 @@ const Navbar = () => {
          </div>
         </div>
 
+        {/* mobile menu */}
+        <div className='md:hidden block'>
+          <button onClick={toggleMobileMenu}>
+            {
+              isMenuOpen ? <IoMdClose className='size-6'/> : <HiMiniBars3BottomRight className='size-6'/>
+            }
+          </button>
+        </div>
+
       </div>
 
       {/* mobile menu items */}
-      <div className='hidden'>Mobile menu items</div>
+      {
+        isMenuOpen && (<div className='md:hidden bg-white shadow-md'>
+          <ul className='flex flex-col items-center space-y-4'>
+          <li onClick={toggleMobileMenu}>
+            <NavLink to='/' className={({ isActive }) => isActive ? "text-blue-500" : "hover:text-gray-800"}>
+          Home
+        </NavLink>  
+          </li>
+
+          <li onClick={toggleMobileMenu}>
+            <NavLink to='/blogs' className={({ isActive }) => isActive ? "text-blue-500" : "hover:text-gray-800"}>
+          Blogs
+        </NavLink>  
+          </li>
+
+          <li onClick={toggleMobileMenu}>
+            <NavLink to='/about' className={({ isActive }) => isActive ? "text-blue-500" : "hover:text-gray-800"}>
+          About
+        </NavLink>  
+          </li>
+
+          <li onClick={toggleMobileMenu}>
+            <NavLink to='/contact' className={({ isActive }) => isActive ? "text-blue-500" : "hover:text-gray-800"}>
+          Contact
+        </NavLink>  
+          </li>
+
+          <Search/>
+
+          </ul>
+
+        </div>)
+      }
 
     </nav>
   )
