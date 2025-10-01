@@ -1,5 +1,6 @@
 import React from 'react'
 import InputField from './InputField'
+import TextAreaField from './TextAreaField'
 
 const AddBlog = () => {
   return (
@@ -16,7 +17,12 @@ const AddBlog = () => {
         placeholder="Blog Title"
         />
         {/* text area */}
-        
+        <TextAreaField 
+        Label="Blog Description"
+        id="description"
+        type ="text"
+        placeholder="Blog Description"
+        />
 
 
 
@@ -39,6 +45,11 @@ const AddBlog = () => {
         type='url'
         placeholder="Blog Image URL"
         />
+
+        <button
+        type='submit'
+        className='w-full max-w-3xl bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' 
+        >Send Message</button>
     </div>
   )
 }
