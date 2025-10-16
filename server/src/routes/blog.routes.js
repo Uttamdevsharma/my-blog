@@ -1,5 +1,4 @@
 const express = require('express')
-const Blog = require('../models/blog.model')
 const { getAllBlogs, singleBlogs, addBlog, deleteBlog, updateBlog } = require('../controllers/blog.controllers')
 
 const router = express.Router()

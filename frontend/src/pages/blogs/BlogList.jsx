@@ -8,12 +8,13 @@ const BlogList = () => {
     const [searchTerm ,setSearchTerm] = useState('')
 
     useEffect(() => {
-        fetch('blogs.json')
+        fetch('http://localhost:3000/blogs')
         .then(response => response.json())
-        .then(data => setBlogs(data))
+        .then(data => setBlogs(data.blogs))
         .catch(error => console.error("Error :" +error))
 
     }, [])
+    
 
     // filter bloges based on title, description and author name
     const filterBlogs = blogs.filter(blog => 

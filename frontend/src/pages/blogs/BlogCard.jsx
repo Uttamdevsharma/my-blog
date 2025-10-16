@@ -22,7 +22,7 @@ const BlogCard = ({blog}) => {
         <p className='text-gray-500'>{`${blog.description.substring(0,120)}`}...</p>
         
         {/* date */}
-        <div mt-4 flex items-center>
+        <div className='mt-4 flex items-center' >
             <img src={blog.author.image} alt=""  className='size-10 rounded-full mr-3'/>
             <div>
                 <p className='text-sm text-gray-600'>{blog.author.name}</p>
