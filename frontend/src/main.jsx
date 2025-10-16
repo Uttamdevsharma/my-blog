@@ -6,7 +6,9 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from './pages/Home/Home.jsx';
 import Blogs from './pages/blogs/Blogs.jsx';
 import AddBlog from './pages/blogs/addBlog/AddBlog.jsx';
-import ManageBlog from './pages/manage-Blog/ManageBlog.jsx';
+import ManageBlog from './pages/blogs/manage-Blog/ManageBlog.jsx';
+import UpdateBlog from './pages/blogs/manage-Blog/UpdateBlog.jsx';
+import BlogDetails from './pages/blogs/BlogDetails.jsx';
 
 
 const router = createBrowserRouter([
@@ -23,12 +25,21 @@ const router = createBrowserRouter([
         element : <Blogs/>
       },
       {
+        path : '/blogs/:id',
+        element : <BlogDetails/>
+
+      },
+      {
         path: '/add-blog',
         element: <AddBlog/>
       },
       {
         path :'/manage-blog',
         element : <ManageBlog/>
+      },
+      {
+        path:'/blogs/edit/:id',
+        element:<UpdateBlog/>
       },
       {
         path: '/about',

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
+import { Link } from 'react-router';
 
 const ManageBlog = () => {
     const [blogs, setBlogs] = useState([]);
@@ -64,10 +65,24 @@ const ManageBlog = () => {
                             {blog.date}
                         </p>
                     </td>
-                    <td className="p-4 border-b border-slate-700">
-                        <p className="text-sm">
-                            Fiction
-                        </p>
+                    <td className="p-4 border-b border-slate-700 space-x-2">
+                       
+                            <Link to={`/blogs/${blog._id}`}
+                            className='bg-blue-400 text-white px-2 py-1 hover:bg-blue-600' >
+                            View
+                            
+                           </Link>
+
+                           <Link to={`/blogs/edit/${blog._id}`} className='bg-yellow-400 text-white px-2 py-1 hover:bg-blue-600' >
+                            Edit
+                            
+                           </Link>
+
+                           <Link className='bg-red-400 text-white px-2 py-1 hover:bg-blue-600' >
+                            Delete
+                            
+                           </Link>
+            
                     </td>
                 </tr>
                 
