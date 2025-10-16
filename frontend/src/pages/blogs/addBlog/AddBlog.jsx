@@ -1,12 +1,15 @@
-import React from 'react'
+import axios from 'axios'
 import InputField from './InputField'
 import TextAreaField from './TextAreaField'
 import { useForm } from "react-hook-form"
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const AddBlog = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors } , reset } = useForm()
 
-    const onSubmit = (data) => {
+    const onSubmit = async(data) => {
         const BlogData = {
             title:data.title,
             description: data.description,
@@ -16,7 +19,16 @@ const AddBlog = () => {
                 image:data.authorImage
             }
         }
-        console.log(BlogData)
+        try {
+            const response =await axios.post("http://localhost:3000/blogs/add-post" , BlogData)
+            if(response.status === 200){
+                toast.success("Your post is created Successfully!");
+                reset()
+            }
+
+        }catch(error){
+            console.log("Error arise",error)
+        }
     }
     
 
@@ -83,6 +95,16 @@ const AddBlog = () => {
                 </button>
 
             </form>
+
+            <ToastContainer
+    position="top-right"
+    autoClose={3000}
+    hideProgressBar={false}
+    newestOnTop={true}
+    closeOnClick
+    pauseOnHover
+    draggable
+  />
         </div>
     )
 }

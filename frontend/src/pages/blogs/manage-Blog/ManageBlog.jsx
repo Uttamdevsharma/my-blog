@@ -1,4 +1,4 @@
-import React from 'react'
+import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Link } from 'react-router';
@@ -7,18 +7,26 @@ const ManageBlog = () => {
     const [blogs, setBlogs] = useState([]);
 
      useEffect(() => {
-            fetch('blogs.json')
+            fetch('http://localhost:3000/blogs/')
             .then(response => response.json())
-            .then(data => setBlogs(data))
+            .then(data => setBlogs(data.blogs))
             .catch(error => console.error("Error :" +error))
     
         }, [])
+
+        const handleDelete = async(id) => {
+            try{
+                await axios.delete(`http://localhost:3000/blogs/${id}`)
+            }catch(error){
+                console.log("Error arise ",error)
+            }
+        }
+
   return (
     <section className='container max-w-7xl mx-auto px-4 py-24'>
         <h2 className='text-2xl font-bold mb-6'>Manage Your Blog</h2>
 
          <div>
-
             {
                blogs.length > 0 ? ( 
                 <table class="w-full text-left table-auto min-w-max">
@@ -62,7 +70,7 @@ const ManageBlog = () => {
                     </td>
                     <td className="p-4 border-b border-slate-700">
                         <p className="text-sm">
-                            {blog.date}
+                             {new Date(blog.createdAt).toLocaleDateString('en-US')}
                         </p>
                     </td>
                     <td className="p-4 border-b border-slate-700 space-x-2">
@@ -78,7 +86,7 @@ const ManageBlog = () => {
                             
                            </Link>
 
-                           <Link className='bg-red-400 text-white px-2 py-1 hover:bg-blue-600' >
+                           <Link onClick={() => handleDelete(blog._id)} className='bg-red-400 text-white px-2 py-1 hover:bg-blue-600' >
                             Delete
                             
                            </Link>
