@@ -8,14 +8,23 @@ router.get('/', (req,res) => {
 })
 
 router.post('/add-post', async(req,res) => {
-   const newBlog = new Blog({
-    ...req.body
-   })
-   const blog = await newBlog.save();
-   res.status(200).send({
-    message : "Post Created Successfully",
-    blog
-})
+
+    try{
+        const newBlog = new Blog({
+            ...req.body
+           })
+           const blog = await newBlog.save();
+           res.status(200).send({
+            message : "Post Created Successfully",
+            blog
+        })
+    }catch(error){
+        res.status(500).send({
+            message : "Error create a  new blog",
+            error
+        })
+    }
+   
 })
 
 
