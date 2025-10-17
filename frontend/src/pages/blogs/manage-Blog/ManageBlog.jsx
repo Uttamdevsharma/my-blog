@@ -17,6 +17,8 @@ const ManageBlog = () => {
         const handleDelete = async(id) => {
             try{
                 await axios.delete(`http://localhost:3000/blogs/${id}`)
+                setBlogs(blogs.filter(blog => blog._id !== id))
+                alert("are you sure?")
             }catch(error){
                 console.log("Error arise ",error)
             }
