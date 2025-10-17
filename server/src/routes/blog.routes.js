@@ -22,7 +22,7 @@ router.delete("/:id" ,deleteBlog )
 
 
 //update a blog route
-router.put("/:id" ,updateBlog)
+router.put("/edit/:id" ,updateBlog)
 
 
 module.exports  = router;

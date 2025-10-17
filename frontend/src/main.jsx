@@ -10,7 +10,6 @@ import ManageBlog from './pages/blogs/manage-Blog/ManageBlog.jsx';
 import UpdateBlog from './pages/blogs/manage-Blog/UpdateBlog.jsx';
 import BlogDetails from './pages/blogs/BlogDetails.jsx';
 
-
 const router = createBrowserRouter([
   {
     path: "/",

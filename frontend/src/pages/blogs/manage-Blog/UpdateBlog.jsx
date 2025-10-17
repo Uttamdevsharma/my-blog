@@ -1,12 +1,35 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import InputField from '../addBlog/InputField'
 import TextAreaField from '../addBlog/TextAreaField'
+import { useParams } from 'react-router'
+import axios from 'axios'
 
 const UpdateBlog = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm()
+    const {id} = useParams()
+  const { register, handleSubmit,reset,setValue, formState: { errors } } = useForm()
+
+  useEffect(() => {
+    const updateBlogs = async() => {
+        try{
+            const fetchSingleBlog = await axios.get(`http://localhost:3000/blogs/${id}`)
+            const blog = fetchSingleBlog.data.blog
+            setValue('title', blog.title)
+            setValue('description',blog.description)
+            setValue('authorImage',blog.author.image)
+            setValue('authorName',blog.author.name);
+            setValue('image',blog.image)
+        }catch(error) {
+            console.log("Error arise",error)
+        }
+       
+
+    }
+    updateBlogs()
+
+  },[])
   
-      const onSubmit = (data) => {
+      const onSubmit = async(data) => {
           const BlogData = {
               title:data.title,
               description: data.description,
@@ -16,8 +39,19 @@ const UpdateBlog = () => {
                   image:data.authorImage
               }
           }
-          console.log(BlogData)
+          try{
+            const blogUpdate = await axios.put(`http://localhost:3000/blogs/edit/${id}`,BlogData)
+            if(blogUpdate.status === 200){
+                alert("blog updated successfully");
+                reset()
+            }
+
+          }catch(error){
+            console.log("Error arise",error)
+          }
       }
+
+      
       
   return (
     <div>
