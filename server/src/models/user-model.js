@@ -40,6 +40,17 @@ userSchema.statics.isEmailTaken = async function (email){
 
 }
 
+
+
+//check if password  match or not(instance level helper)
+userSchema.methods.isPasswordMatch = async function (password){
+    const user =  this;
+
+    return bcrypt.compare(password, user.password)
+
+}
+
+
 //hash password before saving the user(instance level helper)
 // 2 type hook - pre,post
 userSchema.pre("save", async function(next) {
