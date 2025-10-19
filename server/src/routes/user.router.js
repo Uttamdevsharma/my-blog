@@ -3,7 +3,7 @@ const User = require('../models/user-model');
 const userRouter = express.Router()
 const moment = require('moment');
 const { generateToken } = require('../services/token.service');
-const checkAuthentication = require('../middleware/check-auth');
+const {checkAuthentication,checkAuthorization }= require('../middleware/check-auth');
 
 
 
@@ -98,6 +98,12 @@ userRouter.post('/login',async(req,res) => {
 userRouter.get('/profile',checkAuthentication, async(req,res) => {
     res.send({message : "Private profile endpoint"})
 
+})
+
+
+//admin - authorization
+userRouter.get('/admin' ,checkAuthentication,checkAuthorization,async(req,res) => {
+    res.send("admin profile endpoint")
 })
 
 module.exports = userRouter
