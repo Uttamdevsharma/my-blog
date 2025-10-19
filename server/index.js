@@ -14,6 +14,8 @@ app.use(cors())
 //routes
 const blogRoutes = require('./src/routes/blog.routes.js')
 app.use('/blogs',blogRoutes)
+const userRoutes = require('./src/routes/user.router.js')
+app.use('/user',userRoutes)
 
 
 const uri = process.env.DB_URL
