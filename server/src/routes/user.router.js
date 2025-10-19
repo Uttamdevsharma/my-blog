@@ -1,6 +1,9 @@
 const express = require('express');
 const User = require('../models/user-model');
 const userRouter = express.Router()
+const moment = require('moment');
+const { generateToken } = require('../services/token.service');
+const checkAuthentication = require('../middleware/check-auth');
 
 
 
@@ -52,11 +55,49 @@ userRouter.post('/login',async(req,res) => {
                 message: "Incorrect email or password"
             })
         }
+
+
+        const accessTokenExpires = moment().add(process.env.JWT_ACCESS_EXPIRATION_MINUTES,
+            "minute"
+        )
+
+        const accessToken = await generateToken(user._id,
+            user.role,
+            accessTokenExpires,
+            "access"
+        )
+
+
+        res.send({
+            message: "Login successfull",
+            data : {
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                access: {
+                    token: accessToken,
+                    expires: accessTokenExpires.toDate(),
+                    expiresIn: process.env.JWT_ACCESS_EXPIRATION_MINUTES * 60,
+                }
+            },
+    
+        })
+
+
     }catch(error){
         res.send({
             error
         })
     }
+})
+
+
+
+//profile - authenticate check
+userRouter.get('/profile',checkAuthentication, async(req,res) => {
+    res.send({message : "Private profile endpoint"})
+
 })
 
 module.exports = userRouter
