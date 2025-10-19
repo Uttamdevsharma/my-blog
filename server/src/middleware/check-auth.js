@@ -27,4 +27,18 @@ function checkAuthentication(req,res,next) {
       }
 }
 
-module.exports = checkAuthentication
+
+function checkAuthorization (req,res,next){
+    const {role} = req.user;
+
+    if(role === "admin"){
+        next()
+    } else {
+        res.status(401).send({message : "Unauthorized "})
+    }
+}
+
+module.exports ={
+    checkAuthentication,
+    checkAuthorization
+} 
