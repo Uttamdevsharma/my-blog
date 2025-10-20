@@ -9,6 +9,10 @@ import AddBlog from './pages/blogs/addBlog/AddBlog.jsx';
 import ManageBlog from './pages/blogs/manage-Blog/ManageBlog.jsx';
 import UpdateBlog from './pages/blogs/manage-Blog/UpdateBlog.jsx';
 import BlogDetails from './pages/blogs/BlogDetails.jsx';
+import { Provider } from 'react-redux';
+import store from './redux/store.js';
+import ProtectedRoute from './components/ProtectedRoute.jsx';
+
 
 const router = createBrowserRouter([
   {
@@ -30,15 +34,27 @@ const router = createBrowserRouter([
       },
       {
         path: '/add-blog',
-        element: <AddBlog/>
+        element:(
+           <ProtectedRoute>
+             <AddBlog/>
+           </ProtectedRoute>
+        ),
       },
       {
         path :'/manage-blog',
-        element : <ManageBlog/>
+        element : (
+          <ProtectedRoute>
+            <ManageBlog/>
+          </ProtectedRoute>
+        ) 
       },
       {
         path:'/blogs/edit/:id',
-        element:<UpdateBlog/>
+        element:(
+          <ProtectedRoute>
+            <UpdateBlog/>
+          </ProtectedRoute>
+        )
       },
       {
         path: '/about',
@@ -56,6 +72,8 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <RouterProvider router={router} />,
-  </StrictMode>,
+    <Provider store={store}>
+    <RouterProvider router={router} />
+    </Provider>
+  </StrictMode>
 )
