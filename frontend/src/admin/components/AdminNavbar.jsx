@@ -15,8 +15,6 @@ const AdminNavbar = () => {
   };
 
 
-
-
   return (
     
    <div className="flex justify-between items-center bg-white shadow-md px-6 py-3">
