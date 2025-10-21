@@ -27,7 +27,7 @@ router.get('/dashboard' , checkAuthentication,checkAuthorization,async(req,res) 
 })
 
 
-router.get("/blogs" ,checkAuthentication,checkAuthorization,async(req,res) => {
+router.get("/manage-blogs" ,checkAuthentication,checkAuthorization,async(req,res) => {
     try {
         const blogs = await Blog.find().populate("author","name email");
         res.send({
