@@ -16,6 +16,8 @@ const blogRoutes = require('./src/routes/blog.routes.js')
 app.use('/blogs',blogRoutes)
 const userRoutes = require('./src/routes/user.router.js')
 app.use('/user',userRoutes)
+const adminRoutes = require('./src/routes/admin.routes.js');
+app.use('/admin' , adminRoutes);
 
 
 const uri = process.env.DB_URL
