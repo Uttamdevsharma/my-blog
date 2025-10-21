@@ -12,6 +12,8 @@ import BlogDetails from './pages/blogs/BlogDetails.jsx';
 import { Provider } from 'react-redux';
 import store from './redux/store.js';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx';
 
 
 const router = createBrowserRouter([
@@ -22,6 +24,14 @@ const router = createBrowserRouter([
       {
         path: '/',
         element : <Home/>
+      },
+      {
+        path: '/login',
+        element : <Login/>
+      },
+      {
+        path: '/register',
+        element: <Register/>
       },
       {
         path: '/blogs',
