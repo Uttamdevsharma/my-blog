@@ -5,11 +5,14 @@ import { Outlet } from "react-router-dom";
 
 const AdminLayout = () => {
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 flex flex-col">
-        <AdminNavbar />
-        <main className="p-6 flex-1 overflow-auto">
+    <div className="h-screen flex flex-col bg-gray-100">
+      {/* 🔹 উপরের Navbar - পুরো width নেবে */}
+      <AdminNavbar />
+
+      {/* 🔹 নিচের অংশে Sidebar (বাম পাশে) + Main Content (ডান পাশে) */}
+      <div className="flex flex-1">
+        <Sidebar />
+        <main className="flex-1 p-6 overflow-auto">
           <Outlet />
         </main>
       </div>
