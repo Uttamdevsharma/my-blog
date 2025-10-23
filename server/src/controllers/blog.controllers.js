@@ -1,116 +1,86 @@
-const Blog = require("../models/blog.model")
+const Blog = require("../models/blog.model");
 
-//get all blogs
-const getAllBlogs = async(req,res) => {
-    try{
-        const blogs = await Blog.find().sort({createdAt : -1})
+// Get all blogs
+const getAllBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find().populate("author", "name email image").sort({ createdAt: -1 });
+    res.send({ message: "Successfully fetched all blogs", blogs });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching blogs", error });
+  }
+};
 
-        res.send({
-            message : "succesfully fetching all blogs",
-            blogs
-        })
+// Get single blog
+const singleBlogs = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id).populate("author", "name email image");
+    if (!blog) return res.status(404).send({ message: "Blog not found" });
+    res.send({ message: "Successfully fetched blog", blog });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching blog", error });
+  }
+};
 
-    }catch(error){
-        res.status(500).send({
-            message : "Error create a  new blog",
-            error
-    })
-}
-    
-}
+// Add new blog
+const addBlog = async (req, res) => {
+  try {
+    const newBlog = new Blog({
+      ...req.body,
+      author: req.user.sub, // logged-in user id
+    });
+    const blog = await newBlog.save();
+    await blog.populate("author", "name email image");
+    res.status(200).send({ message: "Post Created Successfully", blog });
+  } catch (error) {
+    res.status(500).send({ message: "Error creating blog", error });
+  }
+};
 
-//get single blogs by id
-const singleBlogs = async(req,res) => {
-    const {id} = req.params
-    try{
-        const blog = await Blog.findById(id);
-        if(!blog) {
-            res.send({message : "not blog found"})
-        } else {
-            res.send({
-                message : "successfully fetched",
-                blog
-            })
-        }
+// Get blogs of logged-in user
+const getUserBlogs = async (req, res) => {
+  try {
+    const blogs = await Blog.find({ author: req.user.sub }).populate("author", "name email image").sort({ createdAt: -1 });
+    res.send({ message: "Fetched user blogs successfully", blogs });
+  } catch (error) {
+    res.status(500).send({ message: "Error fetching user blogs", error });
+  }
+};
 
-    }catch(error){
-        res.status(500).send({
-            message : "Error create a  new blog",
-            error
-        })
+// Delete blog
+const deleteBlog = async (req, res) => {
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (blog.author.toString() !== req.user.sub && req.user.role !== "admin") {
+      return res.status(403).send({ message: "Not authorized" });
+    }
+    await blog.deleteOne();
+    res.status(200).send({ message: "Deleted Successfully" });
+  } catch (error) {
+    res.status(500).send({ message: "Error deleting blog", error });
+  }
+};
+
+// Update blog
+const updateBlog = async (req, res) => {
+
+  try {
+    const blog = await Blog.findById(req.params.id);
+    if (!blog) {
+      return res.status(404).send({ message: "Blog not found" });
     }
 
-}
 
-// post a blog
-const addBlog = async(req,res) => {
-
-    try{
-        const newBlog = new Blog({
-            ...req.body
-           })
-           const blog = await newBlog.save();
-           res.status(200).send({
-            message : "Post Created Successfully",
-            blog
-        })
-    }catch(error){
-        res.status(500).send({
-            message : "Error create a  new blog",
-            error
-        })
+    if (blog.author.toString() !== req.user.sub && req.user.role !== "admin") {
+      console.log("Authorization failed");
+      return res.status(403).send({ message: "Not authorized" });
     }
-   
-}
 
-//delete a blog by id
-const deleteBlog =async(req,res) => {
-    const {id} = req.params
-    try{
-        const deleteBlog = await Blog.findByIdAndDelete(id)
-    if(!deleteBlog) {
-        res.status(404).send({message : "not FOUND"})
-    } 
-    res.status(200).send({
-        message : "Deleted Succesfully",
-        deleteBlog
-    })
- }catch(error) {
-    res.status(500).send({
-        message : "Error create a  new blog",
-        error
-    })
+    const updated = await Blog.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    await updated.populate("author", "name email image");
+    res.status(200).send({ message: "Updated Successfully", blog: updated });
+  } catch (error) {
+    res.status(500).send({ message: "Error updating blog", error });
+  }
+};
 
- }
-    
-}
-
-//update a blog
-const updateBlog =  async(req,res) => {
-    try{
-        const {id} = req.params;
-        const updateBlog = await Blog.findByIdAndUpdate(id,req.body, {new: true})
-        if(!updateBlog) {
-            res.status(404).send({message : "not FOUND"})
-        } 
-        res.status(200).send({
-            message : "Updated Succesfully",
-            updateBlog
-        })
-    }catch(error){
-        res.status(500).send({
-            message : "Error create a  update blog",
-            error
-        })
-    }
-}
-
-module.exports = {
-    getAllBlogs,
-    singleBlogs,
-    addBlog,
-    deleteBlog,
-    updateBlog
-
-
-}
+module.exports = { getAllBlogs, singleBlogs, addBlog, getUserBlogs, deleteBlog, updateBlog };

@@ -1,36 +1,20 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { useSelector } from "react-redux";
+import React from "react";
+import Sidebar from "./components/Sidebar";
+import AdminNavbar from "./components/AdminNavbar";
+import { Outlet } from "react-router-dom";
 
-const Dashboard = () => {
-  const [stats, setStats] = useState({});
-  const token = useSelector((state) => state.auth.token);
-
-  useEffect(() => {
-    const fetchStats = async () => {
-      const res = await axios.get("http://localhost:5000/api/admin/dashboard", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setStats(res.data.data);
-    };
-    fetchStats();
-  }, [token]);
-
+const AdminLayout = () => {
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-6">Admin Dashboard</h2>
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-white p-6 shadow rounded-lg text-center">
-          <h3 className="text-lg font-semibold">Total Users</h3>
-          <p className="text-3xl mt-2">{stats.totalUsers}</p>
-        </div>
-        <div className="bg-white p-6 shadow rounded-lg text-center">
-          <h3 className="text-lg font-semibold">Total Blogs</h3>
-          <p className="text-3xl mt-2">{stats.totalBlogs}</p>
-        </div>
+    <div className="flex h-screen bg-gray-100">
+      <Sidebar />
+      <div className="flex-1 flex flex-col">
+        <AdminNavbar />
+        <main className="p-6 flex-1 overflow-auto">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
 };
 
-export default Dashboard;
+export default AdminLayout;

@@ -1,112 +1,93 @@
-import axios from 'axios'
-import InputField from './InputField'
-import TextAreaField from './TextAreaField'
-import { useForm } from "react-hook-form"
+import axios from 'axios';
+import { useForm } from "react-hook-form";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { motion } from 'framer-motion';
+import { useState } from 'react';
 
 const AddBlog = () => {
-    const { register, handleSubmit, formState: { errors } , reset } = useForm()
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [loading, setLoading] = useState(false);
 
-    const onSubmit = async(data) => {
-        const BlogData = {
-            title:data.title,
-            description: data.description,
-            image:data.image,
-            author: {
-                name : data.authorName,
-                image:data.authorImage
-            }
+  const onSubmit = async (data) => {
+    setLoading(true);
+    try {
+      const response = await axios.post("http://localhost:3000/blogs/add-post", {
+        title: data.title,
+        description: data.description,
+        image: data.image
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
         }
-        try {
-            const response =await axios.post("http://localhost:3000/blogs/add-post" , BlogData)
-            if(response.status === 200){
-                toast.success("Your post is created Successfully!");
-                reset()
-            }
+      });
 
-        }catch(error){
-            console.log("Error arise",error)
-        }
+      if(response.status === 200){
+        toast.success("Blog posted successfully!");
+        reset();
+        setTimeout(() => window.location.href = "/", 1500); // redirect after toast
+      }
+    } catch(error) {
+      toast.error("Error posting blog");
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-    
+  }
 
-    return (
-        <div className='container max-w-7xl mx-auto px-4 py-24 space-y-4'>
-            <h2 className='text-2xl font-bold mb-6'>Add New Blog</h2>
+  return (
+    <motion.div
+      className="container max-w-4xl mx-auto p-6"
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-600">Add New Blog ✍️</h2>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <motion.input
+          type="text"
+          placeholder="Blog Title"
+          {...register("title", { required: true })}
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          whileFocus={{ scale: 1.02 }}
+        />
+        {errors.title && <span className="text-red-500">Title is required</span>}
 
-                <InputField
-                    Label="Blog Title"
-                    id="title"
-                    type="text"
-                    placeholder="Blog Title"
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors.title}
-                />
+        <motion.textarea
+          placeholder="Description"
+          {...register("description", { required: true })}
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          rows={5}
+          whileFocus={{ scale: 1.02 }}
+        />
+        {errors.description && <span className="text-red-500">Description is required</span>}
 
-                <TextAreaField
-                    Label="Blog Description"
-                    id="description"
-                    placeholder="Blog Description"
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors.description}
-                />
+        <motion.input
+          type="url"
+          placeholder="Blog Image URL"
+          {...register("image", { required: true })}
+          className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 transition"
+          whileFocus={{ scale: 1.02 }}
+        />
+        {errors.image && <span className="text-red-500">Image URL is required</span>}
 
-                <InputField
-                    Label="Author Name"
-                    id="authorName"
-                    type="text"
-                    placeholder="Author Name"
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors.authorName}
-                />
+        <motion.button
+          type="submit"
+          className={`w-full py-3 rounded-lg text-white font-semibold transition ${
+            loading ? 'bg-blue-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+          }`}
+          whileHover={{ scale: loading ? 1 : 1.05 }}
+          whileTap={{ scale: loading ? 1 : 0.95 }}
+          disabled={loading}
+        >
+          {loading ? 'Posting...' : 'Add Blog'}
+        </motion.button>
+      </form>
 
-                <InputField
-                    Label="Author Image URL"
-                    id="authorImage"
-                    type="url"
-                    placeholder="Author Image URL"
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors.authorImage}
-                />
-
-                <InputField
-                    Label="Blog Image URL"
-                    id="image"
-                    type="url"
-                    placeholder="Blog Image URL"
-                    register={register}
-                    validation={{ required: true }}
-                    error={errors.image}
-                />
-
-                <button
-                    type='submit'
-                    className='w-full max-w-3xl bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50'
-                >
-                    Add Blog
-                </button>
-
-            </form>
-
-            <ToastContainer
-    position="top-right"
-    autoClose={3000}
-    hideProgressBar={false}
-    newestOnTop={true}
-    closeOnClick
-    pauseOnHover
-    draggable
-  />
-        </div>
-    )
+      <ToastContainer position="top-right" autoClose={3000} />
+    </motion.div>
+  );
 }
 
-export default AddBlog
+export default AddBlog;

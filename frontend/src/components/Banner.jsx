@@ -8,34 +8,69 @@ const Banner = () => {
   const token = useSelector((state) => state.auth.token);
 
   return (
-    <div className="my-16">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-semibold mb-4">Meta Blog</h1>
-        <ul className="flex flex-wrap justify-center gap-4">
-          <li><Link to="/">Home</Link></li>
+    <section className="my-16">
+      {/* ===== Header Section ===== */}
+      <header className="text-center mb-10">
+        <h1 className="text-5xl font-extrabold mb-3 text-gray-800 tracking-wide">
+          Meta <span className="text-blue-600">Blog</span>
+        </h1>
+        <ul className="flex flex-wrap justify-center gap-6 text-lg text-gray-600 mt-4">
+          <li>
+            <Link to="/" className="hover:text-blue-600 transition">
+              Home
+            </Link>
+          </li>
           {token && (
             <>
-              <li><Link to="/add-blog">Add New Blog</Link></li>
-              <li><Link to="/manage-blog">Manage Blog</Link></li>
+              <li>
+                <Link to="/add-blog" className="hover:text-blue-600 transition">
+                  Add Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/manage-blog"
+                  className="hover:text-blue-600 transition"
+                >
+                  Manage Blogs
+                </Link>
+              </li>
             </>
           )}
         </ul>
-      </div>
+      </header>
+
+      {/* ===== Banner Image Section ===== */}
       <div
-        className="md:min-h-[450px] h-80 w-full bg-cover bg-no-repeat rounded-md text-white flex flex-col justify-end p-5"
+        className="relative rounded-xl overflow-hidden md:h-[450px] h-80 flex flex-col justify-end p-6 bg-cover bg-center text-white"
         style={{ backgroundImage: `url(${bannerImg})` }}
       >
-        <span className="bg-blue-500 text-center max-w-36 px-4 py-1 rounded-md mb-3">
-          Technology
-        </span>
-        <h2 className="sm:text-3xl text-2xl font-semibold md:w-1/2 mb-5">
-          The Impact of Technology on the Workplace
-        </h2>
-        <div className="flex items-center gap-1">
-          <img src={authorImg} alt="author" />
+        {/* dark overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/40"></div>
+
+        {/* banner text content */}
+        <div className="relative z-10">
+          <span className="bg-blue-600 text-sm uppercase px-4 py-1 rounded-md mb-3 inline-block">
+            Technology
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-semibold md:w-2/3 mb-4 leading-snug">
+            The Impact of Technology on the Workplace
+          </h2>
+
+          <div className="flex items-center gap-3">
+            <img
+              src={authorImg}
+              alt="Author"
+              className="w-10 h-10 rounded-full border-2 border-white"
+            />
+            <div>
+              <p className="font-medium">John Doe</p>
+              <p className="text-sm text-gray-200">March 22, 2025</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

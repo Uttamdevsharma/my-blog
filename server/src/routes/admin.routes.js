@@ -2,6 +2,7 @@ const express = require('express');
 const { checkAuthentication, checkAuthorization } = require('../middleware/check-auth');
 const User = require('../models/user-model');
 const Blog = require('../models/blog.model');
+const { singleBlogs, updateBlog } = require('../controllers/blog.controllers');
 const router = express.Router();
 
 
@@ -43,6 +44,12 @@ router.get("/manage-blogs" ,checkAuthentication,checkAuthorization,async(req,res
     }
 
 })
+
+router.get('/blog/:id', checkAuthentication, checkAuthorization, singleBlogs);
+router.put('/blog/edit/:id', checkAuthentication, checkAuthorization, updateBlog);
+
+router.get('/blog/:id', checkAuthentication, checkAuthorization, singleBlogs);
+router.put('/blog/edit/:id', checkAuthentication, checkAuthorization, updateBlog);
 
 
 module.exports = router

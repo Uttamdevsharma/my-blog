@@ -1,113 +1,82 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { Link } from 'react-router';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const ManageBlog = () => {
-    const [blogs, setBlogs] = useState([]);
+  const [blogs, setBlogs] = useState([]);
+  const { token, user } = useSelector((state) => state.auth);
 
-     useEffect(() => {
-            fetch('http://localhost:3000/blogs/')
-            .then(response => response.json())
-            .then(data => setBlogs(data.blogs))
-            .catch(error => console.error("Error :" +error))
-    
-        }, [])
+  useEffect(() => {
+    const url = user?.role === 'admin' 
+      ? 'http://localhost:3000/blogs' 
+      : 'http://localhost:3000/blogs/user/my-blogs';
 
-        const handleDelete = async(id) => {
-            try{
-                await axios.delete(`http://localhost:3000/blogs/${id}`)
-                setBlogs(blogs.filter(blog => blog._id !== id))
-                alert("are you sure?")
-            }catch(error){
-                console.log("Error arise ",error)
-            }
-        }
+    axios.get(url, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    .then(res => setBlogs(res.data.blogs))
+    .catch(err => console.error(err));
+  }, [token, user]);
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure to delete this blog?")) return;
+    try {
+      await axios.delete(`http://localhost:3000/blogs/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setBlogs(blogs.filter(blog => blog._id !== id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
-    <section className='container max-w-7xl mx-auto px-4 py-24'>
-        <h2 className='text-2xl font-bold mb-6'>Manage Your Blog</h2>
+    <section className="flex justify-center mt-6">
+      <div className="w-full max-w-6xl p-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-blue-600 mb-6 text-center">
+          Manage Your Blogs
+        </h2>
 
-         <div>
-            {
-               blogs.length > 0 ? ( 
-                <table class="w-full text-left table-auto min-w-max">
-            <thead >
-                <tr className='bg-gray-100'>
-                    <th className="p-4 border-b border-slate-600">
-                        <p className="text-sm font-normal leading-none">
-                            Title
-                        </p>
-                    </th>
-                    <th className="p-4 border-b border-slate-600">
-                        <p className="text-sm font-normal leading-none">
-                            Author
-                        </p>
-                    </th>
-                    <th className="p-4 border-b border-slate-600">
-                        <p className="text-sm font-normal leading-none">
-                            Date
-                        </p>
-                    </th>
-                    <th className="p-4 border-b border-slate-600">
-                        <p className="text-sm font-normal leading-none">
-                            Actions
-                        </p>
-                    </th>
+        {blogs.length ? (
+          <div className="overflow-x-auto shadow-md rounded-lg">
+            <table className="min-w-full border-collapse border border-gray-300 text-center">
+              <thead className="bg-gray-100">
+                <tr>
+                  <th className="p-3 border-b">Title</th>
+                  {user?.role === 'admin' && <th className="p-3 border-b">Author</th>}
+                  <th className="p-3 border-b">Date</th>
+                  <th className="p-3 border-b">Actions</th>
                 </tr>
-            </thead>
-            <tbody>
-                      {
-                        blogs.map((blog,index) => (
-                            <tr key={index}>                 
-                    <td className="p-4 border-b border-slate-700">
-                        <p className="text-sm font-semibold">
-                            {blog.title}
-                        </p>
+              </thead>
+              <tbody>
+                {blogs.map(blog => (
+                  <tr key={blog._id} className="hover:bg-gray-50 transition">
+                    <td className="p-3 border-b">{blog.title}</td>
+                    {user?.role === 'admin' && <td className="p-3 border-b">{blog.author?.name || 'Unknown'}</td>}
+                    <td className="p-3 border-b">{new Date(blog.createdAt).toLocaleDateString()}</td>
+                    <td className="p-3 border-b flex justify-center gap-2">
+                      <Link to={user?.role === 'admin' ? `/admin/blog/${blog._id}` : `/blogs/${blog._id}`} className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+                        View
+                      </Link>
+                      <Link to={user?.role === 'admin' ? `/admin/blog/edit/${blog._id}` : `/blogs/edit/${blog._id}`} className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
+                        Edit
+                      </Link>
+                      <button onClick={() => handleDelete(blog._id)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition">
+                        Delete
+                      </button>
                     </td>
-                    <td className="p-4 border-b border-slate-700">
-                        <p className="text-sm">
-                            {blog.author.name}
-                        </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-700">
-                        <p className="text-sm">
-                             {new Date(blog.createdAt).toLocaleDateString('en-US')}
-                        </p>
-                    </td>
-                    <td className="p-4 border-b border-slate-700 space-x-2">
-                       
-                            <Link to={`/blogs/${blog._id}`}
-                            className='bg-blue-400 text-white px-2 py-1 hover:bg-blue-600' >
-                            View
-                            
-                           </Link>
-
-                           <Link to={`/blogs/edit/${blog._id}`} className='bg-yellow-400 text-white px-2 py-1 hover:bg-blue-600' >
-                            Edit
-                            
-                           </Link>
-
-                           <Link onClick={() => handleDelete(blog._id)} className='bg-red-400 text-white px-2 py-1 hover:bg-blue-600' >
-                            Delete
-                            
-                           </Link>
-            
-                    </td>
-                </tr>
-                
-                        ))
-                    }
-                
-            </tbody>
-        </table>
-
-               ) : <div>No data found </div> 
-            }
-         
-         </div>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 mt-4">No blogs found</p>
+        )}
+      </div>
     </section>
-  )
-}
+  );
+};
 
-export default ManageBlog
+export default ManageBlog;

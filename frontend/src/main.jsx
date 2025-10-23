@@ -14,6 +14,11 @@ import store from './redux/store.js';
 import ProtectedRoute from './components/ProtectedRoute.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
+import AdminLayout from './admin/AdminLayout.jsx';
+import Dashboard from './admin/pages/Dashboard.jsx';
+import AdminManageBlogs from './admin/pages/ManageBlogs.jsx';
+import AdminBlogDetails from './admin/pages/AdminBlogDetails.jsx';
+import AdminUpdateBlog from './admin/pages/AdminUpdateBlog.jsx';
 
 
 const router = createBrowserRouter([
@@ -77,6 +82,21 @@ const router = createBrowserRouter([
 
     ]
   },
+
+  {
+    path: "/admin",
+    element: (
+      <ProtectedRoute adminOnly={true}>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
+    children: [
+      { path: "dashboard", element: <Dashboard /> },
+      { path: "manage-blogs", element: <AdminManageBlogs /> },
+      { path: "blog/:id", element: <AdminBlogDetails /> },
+      { path: "blog/edit/:id", element: <AdminUpdateBlog /> },
+    ],
+  }  
 ]);
 
 

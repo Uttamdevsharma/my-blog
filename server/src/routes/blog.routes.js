@@ -1,28 +1,28 @@
-const express = require('express')
-const { getAllBlogs, singleBlogs, addBlog, deleteBlog, updateBlog } = require('../controllers/blog.controllers')
+const express = require('express');
+const {
+  getAllBlogs,
+  singleBlogs,
+  addBlog,
+  deleteBlog,
+  updateBlog,
+  getUserBlogs
+} = require('../controllers/blog.controllers');
+const { checkAuthentication, checkAuthorization } = require('../middleware/check-auth');
 
-const router = express.Router()
+const router = express.Router();
 
+// 🧭 Public Routes
+router.get('/', getAllBlogs);
+router.get('/:id', singleBlogs);
 
-//get all blogs
-router.get('/',getAllBlogs )
+// 🧭 Protected Routes (need login)
+router.post('/add-post', checkAuthentication, addBlog);
 
+// 🧭 Only logged-in user can view their blogs
+router.get('/user/my-blogs', checkAuthentication, getUserBlogs);
 
+// 🧭 Delete & update allowed if it's your own blog or you're admin
+router.delete('/:id', checkAuthentication, deleteBlog);
+router.put('/edit/:id', checkAuthentication, updateBlog);
 
-//get a single blog by id
-router.get('/:id' , singleBlogs)
-
-
-
-//post a new blog
-router.post('/add-post',addBlog )
-
-//delete a blog by id
-router.delete("/:id" ,deleteBlog )
-
-
-//update a blog route
-router.put("/edit/:id" ,updateBlog)
-
-
-module.exports  = router;
+module.exports = router;

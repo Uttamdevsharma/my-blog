@@ -6,7 +6,6 @@ const { generateToken } = require('../services/token.service');
 const {checkAuthentication,checkAuthorization }= require('../middleware/check-auth');
 
 
-
 //register
 userRouter.post('/register' , async(req,res) => {
     const userBody = req.body;

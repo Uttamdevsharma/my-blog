@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router';
 import { logout } from '../../redux/authSlice';
+import { FaUserCircle } from "react-icons/fa";
 
 const AdminNavbar = () => {
 
@@ -14,7 +15,7 @@ const AdminNavbar = () => {
     navigate("/login");
   };
 
-
+  
   return (
     
    <div className="flex justify-between items-center bg-white shadow-md px-6 py-3">
