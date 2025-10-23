@@ -7,7 +7,7 @@ const {
   updateBlog,
   getUserBlogs
 } = require('../controllers/blog.controllers');
-const { checkAuthentication, checkAuthorization } = require('../middleware/check-auth');
+const { checkAuthentication } = require('../middleware/check-auth');
 
 const router = express.Router();
 
