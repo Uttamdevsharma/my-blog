@@ -48,8 +48,5 @@ router.get("/manage-blogs" ,checkAuthentication,checkAuthorization,async(req,res
 router.get('/blog/:id', checkAuthentication, checkAuthorization, singleBlogs);
 router.put('/blog/edit/:id', checkAuthentication, checkAuthorization, updateBlog);
 
-router.get('/blog/:id', checkAuthentication, checkAuthorization, singleBlogs);
-router.put('/blog/edit/:id', checkAuthentication, checkAuthorization, updateBlog);
-
 
 module.exports = router
