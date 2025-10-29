@@ -18,6 +18,8 @@ const userRoutes = require('./src/routes/user.router.js')
 app.use('/user',userRoutes)
 const adminRoutes = require('./src/routes/admin.routes.js');
 app.use('/admin' , adminRoutes);
+const uploadRoutes = require('./src/routes/upload.routes.js')
+app.use('/img',uploadRoutes)
 
 
 const uri = process.env.DB_URL
